@@ -1,0 +1,15 @@
+{
+    "name": "pico_sdk_devcontainer",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "ssd1306_pico_sdk_worker",
+    "overrideCommand": true,
+    "workspaceFolder": "/workspace",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cmake-tools",
+                "ms-vscode.cpptools"
+            ]
+        }
+    }
+}

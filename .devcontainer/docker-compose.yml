@@ -1,0 +1,8 @@
+services:
+  ssd1306_pico_sdk_worker:
+    container_name: ssd1306_pico_sdk_worker
+    build: .
+    restart: "no"
+    volumes:
+      - ~/SDKs/pico-sdk/2.2.0:/home/SDKs/pico-sdk/2.2.0:ro
+      - ..:/workspace
