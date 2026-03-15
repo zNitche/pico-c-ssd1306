@@ -12,8 +12,14 @@ int main() {
     getchar();
 #endif
 
-    SSD1306_I2C ssd1306_i2c = {i2c0, 0x78, 0, 1};
+    SSD1306_I2C ssd1306_i2c = {i2c0, 0x3C, 0, 1};
 
     ssd1306_setup_i2c(ssd1306_i2c);
     sleep_ms(250);
+
+    printf("connected...\n");
+
+    ssd1306_init(ssd1306_i2c);
+
+    printf("ssd1306 init done...\n");
 }
