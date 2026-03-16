@@ -8,7 +8,3 @@ typedef struct {
     int sda_pin;
     int scl_pin;
 } SSD1306_I2C;
-
-enum SSD_1306_COMMANDS {
-    PD_ADXL345_OK = 101,
-};

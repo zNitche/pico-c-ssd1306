@@ -1,6 +1,7 @@
 #include "pico_ssd1306/ssd1306.h"
 #include "pico_ssd1306/communication.h"
 #include "pico_ssd1306/defines.h"
+#include "pico_ssd1306/ssd1306_commands.h"
 
 #include "hardware/i2c.h"
 #include "pico/stdlib.h"
@@ -19,8 +20,24 @@ void ssd1306_init(SSD1306_I2C i2c_c) {
     // datasheet page no. 64 - 3. Software Configuration
 
     uint8_t cmds[] = {
-        0xAE, 0x3F, 0xD3, 0x00, 0x40, 0xA0, 0xA1, 0xC0, 0xC8, 0xDA,
-        0x12, 0x81, 0x7F, 0xA4, 0xA6, 0xD5, 0x80, 0x8D, 0x14, 0xAF,
+        PICO_SSD1306_BASE_DISPLAY_OFF,
+        PICO_SSD1306_SET_MULTIPLEX_RATIO,
+        PICO_SSD1306_SET_DISPLAY_OFFSET_REG,
+        PICO_SSD1306_SET_DISPLAY_OFFSET,
+        PICO_SSD1306_SET_DISPLAY_START_LINE,
+        PICO_SSD1306_SET_SEGMENT_REMAP,
+        PICO_SSD1306_SET_COM_OUTPUT_SCAN_DIRECTION,
+        PICO_SSD1306_SET_COM_PINS_HARDWARE_CONFIGURATION_REG,
+        PICO_SSD1306_SET_COM_PINS_HARDWARE_CONFIGURATION,
+        PICO_SSD1306_SET_CONTRAST_CONTROL_REG,
+        PICO_SSD1306_SET_CONTRAST_RESET,
+        PICO_SSD1306_BASE_ENTIRE_DISPLAY_ON,
+        PICO_SSD1306_BASE_SET_NORMAL_DISPLAY,
+        PICO_SSD1306_SET_DISPLAY_CLOCK_DIVIDE_RATIO_REG,
+        PICO_SSD1306_SET_DISPLAY_CLOCK_DIVIDE_RATIO,
+        PICO_SSD1306_SET_CHARGE_PUMP_SETTING_REG,
+        PICO_SSD1306_SET_CHARGE_PUMP_SETTING,
+        PICO_SSD1306_BASE_DISPLAY_ON,
     };
 
     for (int cmd_ind = 0; cmd_ind < count_of(cmds); cmd_ind++) {
