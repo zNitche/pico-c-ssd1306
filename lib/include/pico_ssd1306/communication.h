@@ -5,3 +5,5 @@
 void _write_to_reg(SSD1306_I2C i2c_c, uint8_t reg, uint8_t buff);
 void _read_from_reg(SSD1306_I2C i2c_c, uint8_t reg, int bytes_to_read,
                     uint8_t* buff);
+void _send_commands(SSD1306_I2C i2c_c, uint8_t cmds[], int commands_count);
+void _send_buffer(SSD1306_I2C i2c_c, uint8_t buffer[], int bufflen);
