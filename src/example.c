@@ -16,10 +16,11 @@ int main() {
 
     ssd1306_setup_i2c(ssd1306_i2c);
     sleep_ms(250);
-
     printf("connected...\n");
 
     ssd1306_init(ssd1306_i2c);
-
     printf("ssd1306 init done...\n");
+
+    ssd1306_clear(ssd1306_i2c);
+    printf("ssd1306 screen cleared...\n");
 }
