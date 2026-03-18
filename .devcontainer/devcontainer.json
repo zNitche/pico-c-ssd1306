@@ -8,7 +8,10 @@
         "vscode": {
             "extensions": [
                 "ms-vscode.cmake-tools",
-                "ms-vscode.cpptools"
+                "ms-vscode.cpptools",
+                "ms-python.python",
+                "ms-python.autopep8",
+                "ms-python.vscode-pylance"
             ]
         }
     }
