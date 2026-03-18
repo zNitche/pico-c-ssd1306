@@ -81,3 +81,21 @@ void ssd1306_clear(SSD1306_I2C i2c_c) {
     _send_commands(i2c_c, cmds, count_of(cmds));
     _send_buffer(i2c_c, buff, bufflen);
 }
+
+void ssd1306_render_bitmap(SSD1306_I2C i2c_c, uint8_t bitmap[], int width,
+                           int height) {
+    const int START_COL = 0;
+    const int END_COL = width - 1;
+    const int START_PAGE = 0;
+    const int END_PAGE = height / PICO_SSD1306_PAGE_HEIGHT - 1;
+
+    uint8_t cmds[] = {
+        PICO_SSD1306_SET_COLUMN_ADDRESS_REG, START_COL,  END_COL,
+        PICO_SSD1306_SET_PAGE_ADDRESS_REG,   START_PAGE, END_PAGE,
+    };
+
+    const int bufflen = width * height / 8;
+
+    _send_commands(i2c_c, cmds, count_of(cmds));
+    _send_buffer(i2c_c, bitmap, bufflen);
+}

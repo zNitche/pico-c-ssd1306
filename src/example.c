@@ -3,6 +3,7 @@
 #include "hardware/i2c.h"
 #include "pico/stdlib.h"
 #include "pico_ssd1306/ssd1306.h"
+#include "pico_ssd1306/bitmaps/ssd1306_test_bitmap.h"
 
 int main() {
     stdio_init_all();
@@ -23,4 +24,6 @@ int main() {
 
     ssd1306_clear(ssd1306_i2c);
     printf("ssd1306 screen cleared...\n");
+
+    ssd1306_render_bitmap(ssd1306_i2c, ssd1306_test_bitmap, 32, 32);
 }
