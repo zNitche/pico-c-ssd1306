@@ -2,8 +2,8 @@ import argparse
 from PIL import Image
 
 
-IMG_WIDTH = 128
-IMG_HEIGHT = 64
+MAX_IMG_WIDTH = 128
+MAX_IMG_HEIGHT = 64
 
 BITS_PER_BYTE = 8
 
@@ -17,9 +17,9 @@ def main(args: argparse.Namespace):
 
     img_width, img_height = pil_img.size
 
-    if img_width > IMG_WIDTH or img_height > IMG_HEIGHT:
+    if img_width > MAX_IMG_WIDTH or img_height > MAX_IMG_HEIGHT:
         raise Exception(
-            f"max supported resolution {IMG_WIDTH}x{IMG_HEIGHT}, got {img_width}x{img_height}")
+            f"max supported resolution {MAX_IMG_WIDTH}x{MAX_IMG_HEIGHT}, got {img_width}x{img_height}")
 
     print("converting to b/w...")
     bw_img = pil_img.convert(mode="1")
@@ -41,11 +41,13 @@ def main(args: argparse.Namespace):
         column_start_offset = columns_row_id * BITS_PER_BYTE
 
         for column_index in range(img_width):
-            column_start_index = column_start_offset + (column_index * img_width)
             column_bits: list[int] = []
 
+            column_start_bit_index = column_start_offset + \
+                (column_index * img_width)
+
             for bit_index in range(BITS_PER_BYTE):
-                target_bit_index = column_start_index + bit_index
+                target_bit_index = column_start_bit_index + bit_index
                 column_bits.append(normalized_pixels[target_bit_index])
 
             bits_columns_segments.append(column_bits)
