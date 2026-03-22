@@ -1,4 +1,6 @@
 import argparse
+from datetime import datetime
+import os
 from PIL import Image
 
 
@@ -45,20 +47,34 @@ def __create_bitmap(bits_columns_segments: list[list[int]]) -> list[str]:
     return output_buffer
 
 
-def __dump_to_file(img_width: int, img_height: int, output_buffer: list[str], output_path: str):
-    with open(output_path, "w") as out_file:
+def __dump_to_file(img_width: int, img_height: int, output_buffer: list[str], output_path: str, dump_to_h: bool):
+    output_filename = str(datetime.timestamp(datetime.now()))
+    output_extension = ".h" if dump_to_h else ".bitmap"
+
+    output_file_path = os.path.join(
+        output_path, f"{output_filename}{output_extension}")
+
+    buff_struct = ', '.join(output_buffer)
+
+    with open(output_file_path, "w") as out_file:
         out_file.write(f"#define bitmap_width {img_width}\n")
         out_file.write(f"#define bitmap_height {img_height}\n")
 
         out_file.write("\n")
 
-        out_file.write(
-            f"static unsigned char bitmap_bits[] = {{ {', '.join(output_buffer)} }};")
+        if dump_to_h:
+            out_file.write(
+                f"static uint8_t bitmap[] = {{{buff_struct}}};")
+
+        else:
+            out_file.write(
+                f"static unsigned char bitmap_bits[] = {{{buff_struct}}};")
 
 
 def main(args: argparse.Namespace):
     img_path = args.input
     output_path = args.output
+    dump_to_h = args.to_h
 
     print(f"opening {img_path}")
     pil_img = Image.open(img_path)
@@ -94,7 +110,11 @@ def main(args: argparse.Namespace):
     print(f"dumped {len(output_buffer)} bytes")
     print(f"saving to {output_path} ...")
 
-    __dump_to_file(img_width, img_height, output_buffer, output_path)
+    if not os.path.isdir(output_path):
+        raise Exception(f"{output_path} is not a directory")
+
+    __dump_to_file(img_width, img_height, output_buffer,
+                   output_path, dump_to_h)
     print("done.")
 
 
@@ -105,6 +125,8 @@ def get_args():
         "--input", type=str, help="path to image file", required=True)
     argument_parser.add_argument(
         "--output", type=str, help="path to output bitmap", required=True)
+    argument_parser.add_argument("--to-h", action=argparse.BooleanOptionalAction,
+                                 default=False, help="save bitmap to *.h file", required=False)
 
     return argument_parser.parse_args()
 
