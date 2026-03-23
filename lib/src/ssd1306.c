@@ -2,6 +2,7 @@
 #include "pico_ssd1306/communication.h"
 #include "pico_ssd1306/defines.h"
 #include "pico_ssd1306/ssd1306_commands.h"
+#include "pico_ssd1306/types.h"
 
 #include "hardware/i2c.h"
 #include "pico/stdlib.h"
@@ -62,40 +63,46 @@ void ssd1306_init(SSD1306_I2C i2c_c) {
     _send_commands(i2c_c, cmds, count_of(cmds));
 }
 
-void ssd1306_clear(SSD1306_I2C i2c_c) {
-    const int START_COL = 0;
-    const int END_COL = PICO_SSD1306_WIDTH - 1;
-    const int START_PAGE = 0;
-    const int END_PAGE = PICO_SSD1306_NUM_PAGES - 1;
-
+void _ssd1306_raw_render(SSD1306_I2C i2c_c, SSD1306_DrawData* draw_data) {
     uint8_t cmds[] = {
-        PICO_SSD1306_SET_COLUMN_ADDRESS_REG, START_COL,  END_COL,
-        PICO_SSD1306_SET_PAGE_ADDRESS_REG,   START_PAGE, END_PAGE,
+        PICO_SSD1306_SET_COLUMN_ADDRESS_REG,
+        draw_data->start_column,
+        draw_data->end_column,
+        PICO_SSD1306_SET_PAGE_ADDRESS_REG,
+        draw_data->start_page,
+        draw_data->end_page,
     };
 
-    const int bufflen = (PICO_SSD1306_WIDTH * PICO_SSD1306_HEIGHT) / 8;
-
-    uint8_t buff[bufflen];
-    memset(buff, 0x00, bufflen);
-
     _send_commands(i2c_c, cmds, count_of(cmds));
-    _write_to_reg(i2c_c, PICO_SSD1306_CONTROL_BYTE_ADDRESS, buff, bufflen);
+    _write_to_reg(i2c_c, PICO_SSD1306_CONTROL_BYTE_ADDRESS, draw_data->bitmap,
+                  draw_data->bufflen);
+}
+
+void ssd1306_clear(SSD1306_I2C i2c_c) {
+    SSD1306_DrawData draw_data = {
+        .start_column = 0,
+        .end_column = PICO_SSD1306_WIDTH - 1,
+        .start_page = 0,
+        .end_page = PICO_SSD1306_NUM_PAGES - 1,
+        .bufflen = (PICO_SSD1306_WIDTH * PICO_SSD1306_HEIGHT) / 8};
+
+    uint8_t buff[draw_data.bufflen];
+    memset(buff, 0x00, draw_data.bufflen);
+
+    draw_data.bitmap = buff;
+
+    _ssd1306_raw_render(i2c_c, &draw_data);
 }
 
 void ssd1306_render_bitmap(SSD1306_I2C i2c_c, uint8_t bitmap[], int width,
                            int height) {
-    const int START_COL = 0;
-    const int END_COL = width - 1;
-    const int START_PAGE = 0;
-    const int END_PAGE = height / PICO_SSD1306_PAGE_HEIGHT - 1;
+    SSD1306_DrawData draw_data = {
+        .start_column = 0,
+        .end_column = width - 1,
+        .start_page = 0,
+        .end_page = height / PICO_SSD1306_PAGE_HEIGHT - 1,
+        .bitmap = bitmap,
+        .bufflen = width * height / 8};
 
-    uint8_t cmds[] = {
-        PICO_SSD1306_SET_COLUMN_ADDRESS_REG, START_COL,  END_COL,
-        PICO_SSD1306_SET_PAGE_ADDRESS_REG,   START_PAGE, END_PAGE,
-    };
-
-    const int bufflen = width * height / 8;
-
-    _send_commands(i2c_c, cmds, count_of(cmds));
-    _write_to_reg(i2c_c, PICO_SSD1306_CONTROL_BYTE_ADDRESS, bitmap, bufflen);
+    _ssd1306_raw_render(i2c_c, &draw_data);
 }
