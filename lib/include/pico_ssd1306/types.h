@@ -10,10 +10,10 @@ typedef struct {
 } SSD1306_I2C;
 
 typedef struct {
-    int start_column;
-    int end_column;
-    int start_page;
-    int end_page;
+    uint8_t start_column;
+    uint8_t end_column;
+    uint8_t start_page;
+    uint8_t end_page;
     uint8_t* bitmap;
-    int bufflen;
+    uint16_t bufflen;
 } SSD1306_DrawData;

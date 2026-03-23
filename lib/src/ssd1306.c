@@ -94,15 +94,16 @@ void ssd1306_clear(SSD1306_I2C i2c_c) {
     _ssd1306_raw_render(i2c_c, &draw_data);
 }
 
-void ssd1306_render_bitmap(SSD1306_I2C i2c_c, uint8_t bitmap[], int width,
-                           int height) {
+void ssd1306_render(SSD1306_I2C i2c_c, uint8_t x, uint8_t y, uint8_t bitmap[],
+                    uint8_t bitmap_width, uint8_t bitmap_height) {
+
     SSD1306_DrawData draw_data = {
-        .start_column = 0,
-        .end_column = width - 1,
+        .start_column = x,
+        .end_column = x + bitmap_width - 1,
         .start_page = 0,
-        .end_page = height / PICO_SSD1306_PAGE_HEIGHT - 1,
+        .end_page = bitmap_height / PICO_SSD1306_PAGE_HEIGHT - 1,
         .bitmap = bitmap,
-        .bufflen = width * height / 8};
+        .bufflen = bitmap_width * bitmap_height / 8};
 
     _ssd1306_raw_render(i2c_c, &draw_data);
 }

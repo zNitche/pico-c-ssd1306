@@ -5,8 +5,8 @@
 #include <string.h>
 
 void _write_to_reg(SSD1306_I2C i2c_c, uint8_t reg_address, uint8_t buffer[],
-                   int bufflen) {
-    const int write_buff_length = bufflen + 1;
+                   uint16_t bufflen) {
+    const uint16_t write_buff_length = bufflen + 1;
     uint8_t* write_buff = malloc(write_buff_length);
 
     write_buff[0] = reg_address;
