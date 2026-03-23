@@ -27,6 +27,6 @@ int main() {
     printf("ssd1306 screen cleared...\n");
 
     ssd1306_render(ssd1306_i2c, 0, 0, ssd1306_test_bitmap, 32, 32);
-    ssd1306_render(ssd1306_i2c, 32, 0, ssd1306_test_bitmap, 32, 32);
-    ssd1306_render(ssd1306_i2c, 64, 0, ssd1306_test_bitmap, 32, 32);
+    ssd1306_render(ssd1306_i2c, 48, 8, ssd1306_test_bitmap, 32, 32);
+    ssd1306_render(ssd1306_i2c, 96, 0, ssd1306_test_bitmap, 32, 32);
 }
