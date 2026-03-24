@@ -1,8 +1,16 @@
 # pico-c-ssd1306
 PicoSDK (C) module for SSD1306 powered 128x64px display
 
+### Tools
+
+##### segments compatible bitmaps
 ```
 python3 tools/convert_to_columns_segmented_bitmap.py --input resources/ssd1306_test.png --output resources/test.bitmap
+```
+
+##### normal bitmap
+```
+python3 tools/convert_to_bitmap.py --input resources/ssd1306_test.png --output resources/test.bitmap
 ```
 
 ### Resources

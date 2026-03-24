@@ -1,42 +1,22 @@
-import os
 import argparse
+import os
 from common import dump_to_file, get_args, BITS_PER_BYTE, MAX_IMG_HEIGHT, MAX_IMG_WIDTH
 from PIL import Image
 
 
-def __create_columns(pixels: list[int],
-                     img_width: int, img_height: int) -> list[list[int]]:
-
-    bits_columns_segments: list[list[int]] = []
-
-    for columns_row_id in range(img_height // BITS_PER_BYTE):
-        column_start_offset = columns_row_id * BITS_PER_BYTE
-
-        for column_index in range(img_width):
-            column_bits: list[int] = []
-
-            column_start_bit_index = column_start_offset + \
-                (column_index * img_width)
-
-            for bit_index in range(BITS_PER_BYTE):
-                target_bit_index = column_start_bit_index + bit_index
-                column_bits.append(pixels[target_bit_index])
-
-            bits_columns_segments.append(column_bits)
-
-    return bits_columns_segments
-
-
-def __create_bitmap(bits_columns_segments: list[list[int]]) -> list[str]:
+def __create_bitmap(pixels: list[int]) -> list[str]:
     output_buffer: list[str] = []
 
-    for column_segment in bits_columns_segments:
-        segment_byte = 0
+    for byte_start_index in range( 0, len(pixels), BITS_PER_BYTE):
+        current_byte = 0
 
-        for bit_index, bit in enumerate(column_segment):
-            segment_byte |= (bit << bit_index)
+        for bit_id in range(BITS_PER_BYTE):
+            bit_index = byte_start_index + bit_id
 
-        output_buffer.append(f'{segment_byte:#04x}')
+            current_byte |= (pixels[bit_index] << bit_id)
+
+        output_buffer.append(f'{current_byte:#04x}')
+            
 
     return output_buffer
 
@@ -68,14 +48,8 @@ def main(args: argparse.Namespace):
     normalized_pixels = [0 if pixel ==
                          255 else 1 for pixel in bw_img_pixels_data]  # type: ignore
 
-    print("creating columns segments...")
-    bits_columns_segments: list[list[int]] = __create_columns(
-        normalized_pixels, img_width, img_height)
-
-    print(f"got {len(bits_columns_segments)} total columns")
-
     print("creating bitmap...")
-    output_buffer: list[str] = __create_bitmap(bits_columns_segments)
+    output_buffer: list[str] = __create_bitmap(normalized_pixels)
 
     print(f"dumped {len(output_buffer)} bytes")
     print(f"saving to {output_path} ...")
