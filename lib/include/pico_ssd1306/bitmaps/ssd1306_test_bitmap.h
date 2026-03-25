@@ -1,5 +1,5 @@
-#define bitmap_width 32
-#define bitmap_height 32
+// #define bitmap_width 32
+// #define bitmap_height 32
 
 static uint8_t ssd1306_test_bitmap[] = {
     0x00, 0x00, 0x00, 0x00, 0xfe, 0xff, 0xff, 0x7f, 0x02, 0x00, 0x00, 0x40,

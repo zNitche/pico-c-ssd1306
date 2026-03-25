@@ -9,3 +9,6 @@ void ssd1306_clear(SSD1306_I2C i2c_c);
 void ssd1306_render_simple_bitmap(SSD1306_I2C i2c_c, uint8_t x, uint8_t y,
                                   uint8_t bitmap[], uint8_t bitmap_width,
                                   uint8_t bitmap_height);
+void ssd1306_render_bitmap(SSD1306_I2C i2c_c, uint8_t x, uint8_t y,
+                           uint8_t bitmap[], uint8_t bitmap_width,
+                           uint8_t bitmap_height);

@@ -1,13 +1,14 @@
-#include "pico_ssd1306/ssd1306.h"
+#include "hardware/i2c.h"
+#include "pico/stdlib.h"
+#include <stdio.h>
+#include <string.h>
+
 #include "pico_ssd1306/communication.h"
 #include "pico_ssd1306/defines.h"
 #include "pico_ssd1306/renderer.h"
+#include "pico_ssd1306/ssd1306.h"
 #include "pico_ssd1306/ssd1306_commands.h"
 #include "pico_ssd1306/types.h"
-
-#include "hardware/i2c.h"
-#include "pico/stdlib.h"
-#include <string.h>
 
 void ssd1306_setup_i2c(SSD1306_I2C i2c_c) {
     i2c_init(i2c_c.i2c, 400000);
@@ -98,6 +99,8 @@ void ssd1306_clear(SSD1306_I2C i2c_c) {
 void ssd1306_render_simple_bitmap(SSD1306_I2C i2c_c, uint8_t x, uint8_t y,
                                   uint8_t bitmap[], uint8_t bitmap_width,
                                   uint8_t bitmap_height) {
+    /// requires columns segmented bitmap -
+    /// convert_to_columns_segmented_bitmap.py
 
     // draw respecting pages, every 8 px
     const uint8_t start_y = y / 8;
@@ -109,6 +112,30 @@ void ssd1306_render_simple_bitmap(SSD1306_I2C i2c_c, uint8_t x, uint8_t y,
         .end_page = start_y + (bitmap_height / PICO_SSD1306_PAGE_HEIGHT - 1),
         .buffer = bitmap,
         .bufflen = bitmap_width * bitmap_height / 8};
+
+    _ssd1306_draw(i2c_c, &draw_data);
+}
+
+void ssd1306_render_bitmap(SSD1306_I2C i2c_c, uint8_t x, uint8_t y,
+                           uint8_t bitmap[], uint8_t bitmap_width,
+                           uint8_t bitmap_height) {
+
+    uint8_t frame[PICO_SSD1306_HEIGHT][PICO_SSD1306_WIDTH] = {0};
+
+    // TODO insert bitmap into frame
+
+    const uint16_t output_buff_length =
+        PICO_SSD1306_NUM_PAGES * PICO_SSD1306_WIDTH;
+    uint8_t output_buff[output_buff_length];
+
+    __convert_frame_to_columns_segments(frame, output_buff, output_buff_length);
+
+    SSD1306_DrawData draw_data = {.start_column = 0,
+                                  .end_column = PICO_SSD1306_WIDTH - 1,
+                                  .start_page = 0,
+                                  .end_page = PICO_SSD1306_NUM_PAGES - 1,
+                                  .bufflen = output_buff_length,
+                                  .buffer = output_buff};
 
     _ssd1306_draw(i2c_c, &draw_data);
 }
