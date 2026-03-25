@@ -75,7 +75,7 @@ void _ssd1306_draw(SSD1306_I2C i2c_c, SSD1306_DrawData* draw_data) {
     };
 
     _send_commands(i2c_c, cmds, count_of(cmds));
-    _write_to_reg(i2c_c, PICO_SSD1306_CONTROL_BYTE_ADDRESS, draw_data->bitmap,
+    _write_to_reg(i2c_c, PICO_SSD1306_CONTROL_BYTE_ADDRESS, draw_data->buffer,
                   draw_data->bufflen);
 }
 
@@ -90,7 +90,7 @@ void ssd1306_clear(SSD1306_I2C i2c_c) {
     uint8_t buff[draw_data.bufflen];
     memset(buff, 0x00, draw_data.bufflen);
 
-    draw_data.bitmap = buff;
+    draw_data.buffer = buff;
 
     _ssd1306_draw(i2c_c, &draw_data);
 }
@@ -107,7 +107,7 @@ void ssd1306_render_simple_bitmap(SSD1306_I2C i2c_c, uint8_t x, uint8_t y,
         .end_column = x + bitmap_width - 1,
         .start_page = start_y,
         .end_page = start_y + (bitmap_height / PICO_SSD1306_PAGE_HEIGHT - 1),
-        .bitmap = bitmap,
+        .buffer = bitmap,
         .bufflen = bitmap_width * bitmap_height / 8};
 
     _ssd1306_draw(i2c_c, &draw_data);

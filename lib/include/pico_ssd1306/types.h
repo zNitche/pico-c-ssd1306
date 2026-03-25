@@ -14,6 +14,6 @@ typedef struct {
     uint8_t end_column;
     uint8_t start_page;
     uint8_t end_page;
-    uint8_t* bitmap;
+    uint8_t* buffer;
     uint16_t bufflen;
 } SSD1306_DrawData;
