@@ -1,6 +1,7 @@
 #include "pico_ssd1306/ssd1306.h"
 #include "pico_ssd1306/communication.h"
 #include "pico_ssd1306/defines.h"
+#include "pico_ssd1306/renderer.h"
 #include "pico_ssd1306/ssd1306_commands.h"
 #include "pico_ssd1306/types.h"
 
@@ -63,7 +64,7 @@ void ssd1306_init(SSD1306_I2C i2c_c) {
     _send_commands(i2c_c, cmds, count_of(cmds));
 }
 
-void _ssd1306_raw_render(SSD1306_I2C i2c_c, SSD1306_DrawData* draw_data) {
+void _ssd1306_draw(SSD1306_I2C i2c_c, SSD1306_DrawData* draw_data) {
     uint8_t cmds[] = {
         PICO_SSD1306_SET_COLUMN_ADDRESS_REG,
         draw_data->start_column,
@@ -91,12 +92,13 @@ void ssd1306_clear(SSD1306_I2C i2c_c) {
 
     draw_data.bitmap = buff;
 
-    _ssd1306_raw_render(i2c_c, &draw_data);
+    _ssd1306_draw(i2c_c, &draw_data);
 }
 
-void ssd1306_render(SSD1306_I2C i2c_c, uint8_t x, uint8_t y, uint8_t bitmap[],
-                    uint8_t bitmap_width, uint8_t bitmap_height) {
-    
+void ssd1306_render_simple_bitmap(SSD1306_I2C i2c_c, uint8_t x, uint8_t y,
+                                  uint8_t bitmap[], uint8_t bitmap_width,
+                                  uint8_t bitmap_height) {
+
     // draw respecting pages, every 8 px
     const uint8_t start_y = y / 8;
 
@@ -108,5 +110,5 @@ void ssd1306_render(SSD1306_I2C i2c_c, uint8_t x, uint8_t y, uint8_t bitmap[],
         .bitmap = bitmap,
         .bufflen = bitmap_width * bitmap_height / 8};
 
-    _ssd1306_raw_render(i2c_c, &draw_data);
+    _ssd1306_draw(i2c_c, &draw_data);
 }
