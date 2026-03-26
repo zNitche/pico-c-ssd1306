@@ -6,19 +6,20 @@
 void __load_bitarray_from_flat_bitmap(uint8_t bitmap[], uint8_t width,
                                       uint8_t height,
                                       uint8_t output[height][width]) {
-    int row_ind = 0;
-    const uint8_t bitmap_length = width * height;
+    uint8_t row_ind = 0;
+    uint8_t col_ind = 0;
+
+    const uint16_t bitmap_length = (width * height) / 8;
 
     for (int byte_ind = 0; byte_ind < bitmap_length; byte_ind++) {
-        uint8_t bits[8] = {0};
-        __byte_to_bits(bitmap[byte_ind], bits);
-
         for (int i = 0; i < 8; i++) {
-            output[row_ind][i + (byte_ind * 8)] = bits[i];
+            output[row_ind][col_ind] = (bitmap[byte_ind] >> i) & 1;
+            col_ind += 1;
         }
 
-        if (byte_ind % width == 0) {
-            row_ind++;
+        if (col_ind % width == 0) {
+            row_ind += 1;
+            col_ind = 0;
         }
     }
 }
