@@ -96,9 +96,9 @@ void ssd1306_clear(SSD1306_I2C i2c_c) {
     _ssd1306_draw(i2c_c, &draw_data);
 }
 
-void ssd1306_render_simple_bitmap(SSD1306_I2C i2c_c, uint8_t x, uint8_t y,
-                                  uint8_t bitmap[], uint8_t bitmap_width,
-                                  uint8_t bitmap_height) {
+void ssd1306_render_fast_bitmap(SSD1306_I2C i2c_c, uint8_t x, uint8_t y,
+                                uint8_t bitmap[], uint8_t bitmap_width,
+                                uint8_t bitmap_height) {
     /// requires columns segmented bitmap -
     /// convert_to_columns_segmented_bitmap.py
 
@@ -122,7 +122,17 @@ void ssd1306_render_bitmap(SSD1306_I2C i2c_c, uint8_t x, uint8_t y,
 
     uint8_t frame[PICO_SSD1306_HEIGHT][PICO_SSD1306_WIDTH] = {0};
 
-    // TODO insert bitmap into frame
+    // uint8_t bitarray[bitmap_height][bitmap_width];
+    // __load_bitarray_from_flat_bitmap(bitmap, bitmap_width, bitmap_height,
+    // bitarray);
+
+    // for tests render 10x5 rectangle on cords x:10 y:7
+
+    for (int h = 0; h < 5; h++) {
+        for (int w = 0; w < 10; w++) {
+            frame[7 + h][10 + w] = 1;
+        }
+    }
 
     const uint16_t output_buff_length =
         PICO_SSD1306_NUM_PAGES * PICO_SSD1306_WIDTH;
