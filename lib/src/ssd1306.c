@@ -1,7 +1,6 @@
 #include "hardware/i2c.h"
 #include "pico/stdlib.h"
 #include <stdio.h>
-#include <string.h>
 
 #include "pico_ssd1306/communication.h"
 #include "pico_ssd1306/defines.h"
@@ -11,7 +10,7 @@
 #include "pico_ssd1306/types.h"
 
 void ssd1306_setup_i2c(SSD1306_I2C i2c_c) {
-    i2c_init(i2c_c.i2c, 400000);
+    i2c_init(i2c_c.i2c, PICO_SSD1306_I2C_BAUDRATE);
 
     gpio_set_function(i2c_c.sda_pin, GPIO_FUNC_I2C);
     gpio_set_function(i2c_c.scl_pin, GPIO_FUNC_I2C);
@@ -80,20 +79,27 @@ void _ssd1306_draw(SSD1306_I2C i2c_c, SSD1306_DrawData* draw_data) {
                   draw_data->bufflen);
 }
 
-void ssd1306_clear(SSD1306_I2C i2c_c) {
-    SSD1306_DrawData draw_data = {
-        .start_column = 0,
-        .end_column = PICO_SSD1306_WIDTH - 1,
-        .start_page = 0,
-        .end_page = PICO_SSD1306_NUM_PAGES - 1,
-        .bufflen = (PICO_SSD1306_WIDTH * PICO_SSD1306_HEIGHT) / 8};
+void ssd1306_render(SSD1306_I2C i2c_c, SSD1306_Frame* frame) {
+    const uint16_t output_buff_length =
+        PICO_SSD1306_NUM_PAGES * PICO_SSD1306_WIDTH;
+    uint8_t output_buff[output_buff_length];
 
-    uint8_t buff[draw_data.bufflen];
-    memset(buff, 0x00, draw_data.bufflen);
+    __convert_frame_to_columns_segments(frame, output_buff, output_buff_length);
 
-    draw_data.buffer = buff;
+    SSD1306_DrawData draw_data = {.start_column = 0,
+                                  .end_column = PICO_SSD1306_WIDTH - 1,
+                                  .start_page = 0,
+                                  .end_page = PICO_SSD1306_NUM_PAGES - 1,
+                                  .bufflen = output_buff_length,
+                                  .buffer = output_buff};
 
     _ssd1306_draw(i2c_c, &draw_data);
+}
+
+void ssd1306_clear(SSD1306_I2C i2c_c) {
+    SSD1306_Frame frame = {.bitmap = {0}};
+
+    ssd1306_render(i2c_c, &frame);
 }
 
 void ssd1306_render_fast_bitmap(SSD1306_I2C i2c_c, uint8_t x, uint8_t y,
@@ -116,30 +122,14 @@ void ssd1306_render_fast_bitmap(SSD1306_I2C i2c_c, uint8_t x, uint8_t y,
     _ssd1306_draw(i2c_c, &draw_data);
 }
 
-void ssd1306_render_bitmap(SSD1306_I2C i2c_c, uint8_t x, uint8_t y,
+void ssd1306_insert_bitmap(SSD1306_Frame* frame, uint8_t x, uint8_t y,
                            uint8_t bitmap[], uint8_t bitmap_width,
                            uint8_t bitmap_height) {
 
-    SSD1306_Frame frame;
-
     uint8_t bitarray[bitmap_height][bitmap_width];
     __load_bitarray_from_flat_bitmap(bitmap, bitmap_width, bitmap_height,
-    bitarray);
+                                     bitarray);
 
-    __insert_bitmap_into_frame(&frame, x, y, bitmap_width, bitmap_height, bitarray);
-
-    const uint16_t output_buff_length =
-        PICO_SSD1306_NUM_PAGES * PICO_SSD1306_WIDTH;
-    uint8_t output_buff[output_buff_length];
-
-    __convert_frame_to_columns_segments(&frame, output_buff, output_buff_length);
-
-    SSD1306_DrawData draw_data = {.start_column = 0,
-                                  .end_column = PICO_SSD1306_WIDTH - 1,
-                                  .start_page = 0,
-                                  .end_page = PICO_SSD1306_NUM_PAGES - 1,
-                                  .bufflen = output_buff_length,
-                                  .buffer = output_buff};
-
-    _ssd1306_draw(i2c_c, &draw_data);
+    __insert_bitmap_into_frame(frame, x, y, bitmap_width, bitmap_height,
+                               bitarray);
 }

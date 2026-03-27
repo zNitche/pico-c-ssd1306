@@ -1,5 +1,7 @@
 #pragma once
 
+#define PICO_SSD1306_I2C_BAUDRATE 400000
+
 #define PICO_SSD1306_WIDTH 128
 #define PICO_SSD1306_HEIGHT 64
 

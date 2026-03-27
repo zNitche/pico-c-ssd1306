@@ -30,7 +30,13 @@ int main() {
     // ssd1306_render_simple_bitmap(ssd1306_i2c, 48, 8,
     //                              ssd1306_test_segmented_bitmap, 32, 32);
 
-    ssd1306_render_bitmap(ssd1306_i2c, 12, 3, ssd1306_test_bitmap, 32, 32);
-    sleep_ms(3000);
-    ssd1306_render_bitmap(ssd1306_i2c, 68, 12, ssd1306_test_bitmap, 32, 32);
+    SSD1306_Frame frame = {.bitmap = {0}};
+
+    ssd1306_insert_bitmap(&frame, 12, 3, ssd1306_test_bitmap, 32, 32);
+    ssd1306_insert_bitmap(&frame, 68, 12, ssd1306_test_bitmap, 32, 32);
+
+    printf("rendering...\n");
+
+    ssd1306_render(ssd1306_i2c, &frame);
+    printf("rendered\n");
 }
