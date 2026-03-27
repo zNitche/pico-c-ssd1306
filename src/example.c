@@ -30,7 +30,8 @@ int main() {
     // ssd1306_render_simple_bitmap(ssd1306_i2c, 48, 8,
     //                              ssd1306_test_segmented_bitmap, 32, 32);
 
-    SSD1306_Frame frame = {.bitmap = {0}};
+    SSD1306_Frame frame;
+    ssd1306_prepare_frame(&frame);
 
     ssd1306_insert_bitmap(&frame, 12, 3, ssd1306_test_bitmap, 32, 32);
     ssd1306_insert_bitmap(&frame, 68, 12, ssd1306_test_bitmap, 32, 32);

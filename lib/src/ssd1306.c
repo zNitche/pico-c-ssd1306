@@ -1,6 +1,7 @@
 #include "hardware/i2c.h"
 #include "pico/stdlib.h"
 #include <stdio.h>
+#include <string.h>
 
 #include "pico_ssd1306/communication.h"
 #include "pico_ssd1306/defines.h"
@@ -100,6 +101,10 @@ void ssd1306_clear(SSD1306_I2C i2c_c) {
     SSD1306_Frame frame = {.bitmap = {0}};
 
     ssd1306_render(i2c_c, &frame);
+}
+
+void ssd1306_prepare_frame(SSD1306_Frame* frame) {
+    memset(frame->bitmap, 0, (PICO_SSD1306_WIDTH * PICO_SSD1306_HEIGHT));
 }
 
 void ssd1306_render_fast_bitmap(SSD1306_I2C i2c_c, uint8_t x, uint8_t y,
