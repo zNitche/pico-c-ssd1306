@@ -25,8 +25,8 @@ void __load_bitarray_from_flat_bitmap(uint8_t bitmap[], uint8_t width,
 }
 
 void __insert_bitmap_into_frame(
-    uint8_t frame[PICO_SSD1306_HEIGHT][PICO_SSD1306_WIDTH], uint8_t x,
-    uint8_t y, uint8_t bitarray_width, uint8_t bitarray_height,
+    SSD1306_Frame* frame, uint8_t x, uint8_t y, uint8_t bitarray_width,
+    uint8_t bitarray_height,
     uint8_t bitarray[bitarray_height][bitarray_width]) {
 
     if (y + bitarray_height >= PICO_SSD1306_HEIGHT) {
@@ -42,13 +42,13 @@ void __insert_bitmap_into_frame(
             const uint8_t frame_y = h + y;
             const uint8_t frame_x = w + x;
 
-            frame[frame_y][frame_x] = bitarray[h][w];
+            frame->bitmap[frame_y][frame_x] = bitarray[h][w];
         }
     }
 }
 
 void __convert_frame_to_columns_segments(
-    uint8_t frame[PICO_SSD1306_HEIGHT][PICO_SSD1306_WIDTH], uint8_t* output,
+    SSD1306_Frame* frame, uint8_t output[],
     uint16_t output_buff_length) {
 
     const uint16_t flattened_buff_length =
@@ -65,7 +65,7 @@ void __convert_frame_to_columns_segments(
 
             for (int bit_ind = 0; bit_ind < PICO_SSD1306_PAGE_HEIGHT;
                  bit_ind++) {
-                byte |= frame[row_start_ind + bit_ind][col_ind] << bit_ind;
+                byte |= frame->bitmap[row_start_ind + bit_ind][col_ind] << bit_ind;
             }
 
             output[output_item_ind] = byte;

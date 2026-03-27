@@ -2,8 +2,8 @@
 
 #include "hardware/i2c.h"
 #include "pico/stdlib.h"
-#include "pico_ssd1306/bitmaps/ssd1306_test_segmented_bitmap.h"
 #include "pico_ssd1306/bitmaps/ssd1306_test_bitmap.h"
+#include "pico_ssd1306/bitmaps/ssd1306_test_segmented_bitmap.h"
 #include "pico_ssd1306/ssd1306.h"
 
 int main() {
@@ -27,12 +27,10 @@ int main() {
     ssd1306_clear(ssd1306_i2c);
     printf("ssd1306 screen cleared...\n");
 
-    ssd1306_render_bitmap(ssd1306_i2c, 0, 0, ssd1306_test_bitmap, 32, 32);
-
-    // ssd1306_render_simple_bitmap(ssd1306_i2c, 0, 0,
-    //                              ssd1306_test_segmented_bitmap, 32, 32);
     // ssd1306_render_simple_bitmap(ssd1306_i2c, 48, 8,
     //                              ssd1306_test_segmented_bitmap, 32, 32);
-    // ssd1306_render_simple_bitmap(ssd1306_i2c, 96, 0,
-    //                              ssd1306_test_segmented_bitmap, 32, 32);
+
+    ssd1306_render_bitmap(ssd1306_i2c, 12, 3, ssd1306_test_bitmap, 32, 32);
+    sleep_ms(3000);
+    ssd1306_render_bitmap(ssd1306_i2c, 68, 12, ssd1306_test_bitmap, 32, 32);
 }

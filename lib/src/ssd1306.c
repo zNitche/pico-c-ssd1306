@@ -120,19 +120,19 @@ void ssd1306_render_bitmap(SSD1306_I2C i2c_c, uint8_t x, uint8_t y,
                            uint8_t bitmap[], uint8_t bitmap_width,
                            uint8_t bitmap_height) {
 
-    uint8_t frame[PICO_SSD1306_HEIGHT][PICO_SSD1306_WIDTH] = {0};
+    SSD1306_Frame frame;
 
     uint8_t bitarray[bitmap_height][bitmap_width];
     __load_bitarray_from_flat_bitmap(bitmap, bitmap_width, bitmap_height,
     bitarray);
 
-    __insert_bitmap_into_frame(frame, x, y, bitmap_width, bitmap_height, bitarray);
+    __insert_bitmap_into_frame(&frame, x, y, bitmap_width, bitmap_height, bitarray);
 
     const uint16_t output_buff_length =
         PICO_SSD1306_NUM_PAGES * PICO_SSD1306_WIDTH;
     uint8_t output_buff[output_buff_length];
 
-    __convert_frame_to_columns_segments(frame, output_buff, output_buff_length);
+    __convert_frame_to_columns_segments(&frame, output_buff, output_buff_length);
 
     SSD1306_DrawData draw_data = {.start_column = 0,
                                   .end_column = PICO_SSD1306_WIDTH - 1,

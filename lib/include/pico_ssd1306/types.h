@@ -1,6 +1,7 @@
 #pragma once
 
 #include "hardware/i2c.h"
+#include "pico_ssd1306/defines.h"
 
 typedef struct {
     i2c_inst_t* i2c;
@@ -17,3 +18,7 @@ typedef struct {
     uint8_t* buffer;
     uint16_t bufflen;
 } SSD1306_DrawData;
+
+typedef struct {
+    uint8_t bitmap[PICO_SSD1306_HEIGHT][PICO_SSD1306_WIDTH];
+} SSD1306_Frame;
