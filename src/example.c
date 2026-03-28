@@ -33,8 +33,15 @@ int main() {
     SSD1306_Frame frame;
     ssd1306_prepare_frame(&frame);
 
-    ssd1306_insert_bitmap(&frame, 12, 3, ssd1306_test_bitmap, 32, 32);
-    ssd1306_insert_bitmap(&frame, 68, 12, ssd1306_test_bitmap, 32, 32);
+    printf("frame prepared\n");
+
+    SSD1306_Bitmap test_bitmap = {.width = 32, .height = 32, .data = NULL};
+    ssd1306_load_bitmap(ssd1306_test_bitmap, &test_bitmap);
+
+    printf("loaded test bitmap\n");
+
+    ssd1306_insert_bitmap(&frame, 12, 3, &test_bitmap);
+    ssd1306_insert_bitmap(&frame, 68, 12, &test_bitmap);
 
     printf("rendering...\n");
 

@@ -11,6 +11,6 @@ void ssd1306_prepare_frame(SSD1306_Frame* frame);
 void ssd1306_render_fast_bitmap(SSD1306_I2C i2c_c, uint8_t x, uint8_t y,
                                 uint8_t bitmap[], uint8_t bitmap_width,
                                 uint8_t bitmap_height);
+void ssd1306_load_bitmap(uint8_t* raw_bitmap, SSD1306_Bitmap* target_bitmap);
 void ssd1306_insert_bitmap(SSD1306_Frame* frame, uint8_t x, uint8_t y,
-                           uint8_t bitmap[], uint8_t bitmap_width,
-                           uint8_t bitmap_height);
+                           SSD1306_Bitmap* bitmap);

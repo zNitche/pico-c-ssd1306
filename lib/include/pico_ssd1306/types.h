@@ -22,3 +22,9 @@ typedef struct {
 typedef struct {
     uint8_t bitmap[PICO_SSD1306_HEIGHT][PICO_SSD1306_WIDTH];
 } SSD1306_Frame;
+
+typedef struct {
+    uint8_t width;
+    uint8_t height;
+    uint8_t** data;
+} SSD1306_Bitmap;
