@@ -25,6 +25,7 @@ def main(args: argparse.Namespace):
     img_path = args.input
     output_path = args.output
     dump_to_h = args.to_h
+    output_file_name = args.output_file_name
 
     print(f"opening {img_path}")
     pil_img = Image.open(img_path)
@@ -58,7 +59,7 @@ def main(args: argparse.Namespace):
         raise Exception(f"{output_path} is not a directory")
 
     dump_to_file(img_width, img_height, output_buffer,
-                 output_path, dump_to_h)
+                 output_path, dump_to_h, name_override=output_file_name)
     print("done.")
 
 
