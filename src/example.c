@@ -2,7 +2,7 @@
 
 #include "hardware/i2c.h"
 #include "pico/stdlib.h"
-#include "pico_ssd1306/bitmaps/ssd1306_test_bitmap.h"
+#include "pico_ssd1306/resources/ssd1306_test_bitmap.h"
 #include "pico_ssd1306/ssd1306.h"
 
 int main() {

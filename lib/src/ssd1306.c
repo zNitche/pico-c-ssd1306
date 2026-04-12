@@ -6,7 +6,7 @@
 
 #include "pico_ssd1306/communication.h"
 #include "pico_ssd1306/defines.h"
-#include "pico_ssd1306/font.h"
+#include "pico_ssd1306/resources/font_8bit.h"
 #include "pico_ssd1306/renderer.h"
 #include "pico_ssd1306/ssd1306.h"
 #include "pico_ssd1306/ssd1306_commands.h"
@@ -158,7 +158,7 @@ void __ssd1306_render_character(SSD1306_Frame* frame, uint8_t x, uint8_t y,
     int char_index = (int)toupper(character);
 
     uint8_t char_buff[8] = {0};
-    memcpy(char_buff, font[char_index - 32], 8);
+    memcpy(char_buff, font_8bit[char_index - 32], 8);
 
     ssd1306_load_bitmap(char_buff, &char_bitmap);
     __insert_bitmap_into_frame(frame, x, y, &char_bitmap);
