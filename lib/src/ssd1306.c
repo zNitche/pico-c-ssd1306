@@ -105,6 +105,18 @@ void ssd1306_clear(SSD1306_I2C i2c_c) {
     ssd1306_render(i2c_c, &frame);
 }
 
+void ssd1306_display_on(SSD1306_I2C i2c_c) {
+    uint8_t cmds[1] = {PICO_SSD1306_BASE_DISPLAY_ON};
+
+    _send_commands(i2c_c, cmds, 1);
+}
+
+void ssd1306_display_off(SSD1306_I2C i2c_c) {
+    uint8_t cmds[1] = {PICO_SSD1306_BASE_DISPLAY_OFF};
+
+    _send_commands(i2c_c, cmds, 1);
+}
+
 void ssd1306_prepare_frame(SSD1306_Frame* frame) {
     memset(frame->bitmap, 0, (PICO_SSD1306_WIDTH * PICO_SSD1306_HEIGHT));
 }

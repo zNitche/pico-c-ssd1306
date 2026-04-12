@@ -50,4 +50,13 @@ int main() {
 
     ssd1306_render(ssd1306_i2c, &frame);
     printf("rendered\n");
+
+    sleep_ms(3000);
+    ssd1306_display_off(ssd1306_i2c);
+    sleep_ms(3000);
+    ssd1306_display_on(ssd1306_i2c);
+
+    ssd1306_insert_bitmap(&frame, 68, 12, &test_bitmap);
+
+    ssd1306_render(ssd1306_i2c, &frame);
 }
