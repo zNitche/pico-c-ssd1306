@@ -41,7 +41,10 @@ int main() {
     printf("loaded test bitmap, size: %d bytes\n", sizeof(test_bitmap));
 
     ssd1306_insert_bitmap(&frame, 12, 3, &test_bitmap);
-    ssd1306_insert_bitmap(&frame, 68, 12, &test_bitmap);
+    // ssd1306_insert_bitmap(&frame, 68, 12, &test_bitmap);
+    
+    char text[] = "B";
+    ssd1306_render_character(&frame, 68, 12, text[0]);
 
     printf("rendering...\n");
 

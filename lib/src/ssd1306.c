@@ -1,10 +1,12 @@
 #include "hardware/i2c.h"
 #include "pico/stdlib.h"
+#include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 
 #include "pico_ssd1306/communication.h"
 #include "pico_ssd1306/defines.h"
+#include "pico_ssd1306/font.h"
 #include "pico_ssd1306/renderer.h"
 #include "pico_ssd1306/ssd1306.h"
 #include "pico_ssd1306/ssd1306_commands.h"
@@ -135,4 +137,18 @@ void ssd1306_load_bitmap(uint8_t* raw_bitmap, SSD1306_Bitmap* target_bitmap) {
 void ssd1306_insert_bitmap(SSD1306_Frame* frame, uint8_t x, uint8_t y,
                            SSD1306_Bitmap* bitmap) {
     __insert_bitmap_into_frame(frame, x, y, bitmap);
+}
+
+void ssd1306_render_character(SSD1306_Frame* frame, uint8_t x, uint8_t y,
+                              char character) {
+    SSD1306_Bitmap char_bitmap = {.width = 8, .height = 8, .data = NULL};
+
+    int char_index = (int)toupper(character);
+
+    uint8_t char_buff[8] = {0};
+    memcpy(char_buff, font[char_index - 32], 8);
+
+    ssd1306_load_bitmap(char_buff, &char_bitmap);
+
+    ssd1306_insert_bitmap(frame, x, y, &char_bitmap);
 }
