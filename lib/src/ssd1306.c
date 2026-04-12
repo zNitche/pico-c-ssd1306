@@ -121,26 +121,6 @@ void ssd1306_prepare_frame(SSD1306_Frame* frame) {
     memset(frame->bitmap, 0, (PICO_SSD1306_WIDTH * PICO_SSD1306_HEIGHT));
 }
 
-void ssd1306_render_fast_bitmap(SSD1306_I2C i2c_c, uint8_t x, uint8_t y,
-                                uint8_t bitmap[], uint8_t bitmap_width,
-                                uint8_t bitmap_height) {
-    /// requires columns segmented bitmap -
-    /// convert_to_columns_segmented_bitmap.py
-
-    // draw respecting pages, every 8 px
-    const uint8_t start_y = y / 8;
-
-    SSD1306_DrawData draw_data = {
-        .start_column = x,
-        .end_column = x + bitmap_width - 1,
-        .start_page = start_y,
-        .end_page = start_y + (bitmap_height / PICO_SSD1306_PAGE_HEIGHT - 1),
-        .buffer = bitmap,
-        .bufflen = bitmap_width * bitmap_height / 8};
-
-    _ssd1306_draw(i2c_c, &draw_data);
-}
-
 void ssd1306_load_bitmap(uint8_t* raw_bitmap, SSD1306_Bitmap* target_bitmap) {
     __init_bitmap(target_bitmap);
     __load_bitarray_from_flat_bitmap(raw_bitmap, target_bitmap);
