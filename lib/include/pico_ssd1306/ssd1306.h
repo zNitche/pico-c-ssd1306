@@ -19,4 +19,4 @@ void ssd1306_insert_bitmap(SSD1306_Frame* frame, uint8_t x, uint8_t y,
 void __ssd1306_render_character(SSD1306_Frame* frame, uint8_t x, uint8_t y,
                                 char character);
 void ssd1306_render_string(SSD1306_Frame* frame, uint8_t x, uint8_t y,
-                           char* string, int spacing);
+                           char* string, int spacing, bool textwrap);

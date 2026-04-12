@@ -44,7 +44,7 @@ int main() {
     // ssd1306_insert_bitmap(&frame, 68, 12, &test_bitmap);
     
     char text[] = "Hello World";
-    ssd1306_render_string(&frame, 0, 46, text, 3);
+    ssd1306_render_string(&frame, 0, 46, text, 3, true);
 
     printf("rendering...\n");
 

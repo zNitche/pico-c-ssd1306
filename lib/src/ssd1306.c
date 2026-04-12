@@ -152,12 +152,19 @@ void ssd1306_insert_bitmap(SSD1306_Frame* frame, uint8_t x, uint8_t y,
 }
 
 void ssd1306_render_string(SSD1306_Frame* frame, uint8_t x, uint8_t y,
-                           char* string, int spacing) {
+                           char* string, int spacing, bool textwrap) {
     int current_x = x;
     int current_y = y;
 
     for (int i = 0; i < strlen(string); i++) {
         char ch = string[i];
+
+        if (textwrap) {
+            if (current_x >= PICO_SSD1306_WIDTH) {
+                current_y += 8 + spacing;
+                current_x = x;
+            }
+        }
 
         __ssd1306_render_character(frame, current_x, current_y, ch);
         current_x += 8 + spacing;
