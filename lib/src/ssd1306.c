@@ -139,8 +139,21 @@ void ssd1306_insert_bitmap(SSD1306_Frame* frame, uint8_t x, uint8_t y,
     __insert_bitmap_into_frame(frame, x, y, bitmap);
 }
 
-void ssd1306_render_character(SSD1306_Frame* frame, uint8_t x, uint8_t y,
-                              char character) {
+void ssd1306_render_string(SSD1306_Frame* frame, uint8_t x, uint8_t y,
+                           char* string, int spacing) {
+    int current_x = x;
+    int current_y = y;
+
+    for (int i = 0; i < strlen(string); i++) {
+        char ch = string[i];
+
+        __ssd1306_render_character(frame, current_x, current_y, ch);
+        current_x += 8 + spacing;
+    }
+}
+
+void __ssd1306_render_character(SSD1306_Frame* frame, uint8_t x, uint8_t y,
+                                char character) {
     SSD1306_Bitmap char_bitmap = {.width = 8, .height = 8, .data = NULL};
 
     int char_index = (int)toupper(character);
