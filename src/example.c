@@ -13,8 +13,11 @@ int main() {
     getchar();
 #endif
 
-    SSD1306_I2C ssd1306_i2c = {
-        .i2c = i2c0, .device_address = 0x3C, .sda_pin = 0, .scl_pin = 1};
+    SSD1306_I2C ssd1306_i2c = {.i2c = i2c0,
+                               .device_address =
+                                   PICO_SSD1306_I2C_DEFAULT_ADDRESS,
+                               .sda_pin = 0,
+                               .scl_pin = 1};
 
     ssd1306_setup_i2c(ssd1306_i2c);
     sleep_ms(250);
@@ -38,9 +41,9 @@ int main() {
 
     ssd1306_insert_bitmap(&frame, 12, 3, &test_bitmap);
     // ssd1306_insert_bitmap(&frame, 68, 12, &test_bitmap);
-    
-    char text[] = "Hello World";
-    ssd1306_render_string(&frame, 0, 46, text, 3, true);
+
+    char text[] = "pico ssd1306";
+    ssd1306_render_string(&frame, 0, 46, text, 2, true);
 
     printf("rendering...\n");
 
