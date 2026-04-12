@@ -174,6 +174,5 @@ void __ssd1306_render_character(SSD1306_Frame* frame, uint8_t x, uint8_t y,
     memcpy(char_buff, font[char_index - 32], 8);
 
     ssd1306_load_bitmap(char_buff, &char_bitmap);
-
-    ssd1306_insert_bitmap(frame, x, y, &char_bitmap);
+    __insert_bitmap_into_frame(frame, x, y, &char_bitmap);
 }
