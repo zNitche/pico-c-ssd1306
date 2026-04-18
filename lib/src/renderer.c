@@ -5,7 +5,7 @@
 #include "pico_ssd1306/helpers.h"
 #include "pico_ssd1306/renderer.h"
 
-void __init_bitmap(SSD1306_Bitmap* bitmap) {
+void _ssd1306_init_bitmap(SSD1306_Bitmap* bitmap) {
     bitmap->data = malloc(bitmap->height * sizeof(uint8_t*));
 
     for (int row_ind = 0; row_ind < bitmap->height; row_ind++) {
@@ -13,7 +13,8 @@ void __init_bitmap(SSD1306_Bitmap* bitmap) {
     }
 }
 
-void __load_bitarray_from_flat_bitmap(uint8_t* bitmap, SSD1306_Bitmap* output) {
+void _ssd1306_load_bitarray_from_flat_bitmap(uint8_t* bitmap,
+                                             SSD1306_Bitmap* output) {
     uint8_t row_ind = 0;
     uint8_t col_ind = 0;
 
@@ -32,8 +33,8 @@ void __load_bitarray_from_flat_bitmap(uint8_t* bitmap, SSD1306_Bitmap* output) {
     }
 }
 
-void __insert_bitmap_into_frame(SSD1306_Frame* frame, uint8_t x, uint8_t y,
-                                SSD1306_Bitmap* bitmap) {
+void _ssd1306_insert_bitmap_into_frame(SSD1306_Frame* frame, uint8_t x,
+                                       uint8_t y, SSD1306_Bitmap* bitmap) {
 
     if (y + bitmap->height >= PICO_SSD1306_HEIGHT) {
         return;
@@ -53,8 +54,9 @@ void __insert_bitmap_into_frame(SSD1306_Frame* frame, uint8_t x, uint8_t y,
     }
 }
 
-void __convert_frame_to_columns_segments(SSD1306_Frame* frame, uint8_t output[],
-                                         uint16_t output_buff_length) {
+void _ssd1306_convert_frame_to_columns_segments(SSD1306_Frame* frame,
+                                                uint8_t output[],
+                                                uint16_t output_buff_length) {
 
     const uint16_t flattened_buff_length =
         (PICO_SSD1306_HEIGHT * PICO_SSD1306_WIDTH) / 8;

@@ -6,8 +6,8 @@
 
 #include "pico_ssd1306/communication.h"
 #include "pico_ssd1306/defines.h"
-#include "pico_ssd1306/resources/font_8bit.h"
 #include "pico_ssd1306/renderer.h"
+#include "pico_ssd1306/resources/ssd1306_font_8bit.h"
 #include "pico_ssd1306/ssd1306.h"
 #include "pico_ssd1306/ssd1306_commands.h"
 #include "pico_ssd1306/types.h"
@@ -64,7 +64,7 @@ void ssd1306_init(SSD1306_I2C i2c_c) {
         PICO_SSD1306_BASE_DISPLAY_ON,
     };
 
-    _send_commands(i2c_c, cmds, count_of(cmds));
+    _ssd1306_send_commands(i2c_c, cmds, count_of(cmds));
 }
 
 void _ssd1306_draw(SSD1306_I2C i2c_c, SSD1306_DrawData* draw_data) {
@@ -77,9 +77,9 @@ void _ssd1306_draw(SSD1306_I2C i2c_c, SSD1306_DrawData* draw_data) {
         draw_data->end_page,
     };
 
-    _send_commands(i2c_c, cmds, count_of(cmds));
-    _write_to_reg(i2c_c, PICO_SSD1306_CONTROL_BYTE_ADDRESS, draw_data->buffer,
-                  draw_data->bufflen);
+    _ssd1306_send_commands(i2c_c, cmds, count_of(cmds));
+    _ssd1306_write_to_reg(i2c_c, PICO_SSD1306_CONTROL_BYTE_ADDRESS,
+                          draw_data->buffer, draw_data->bufflen);
 }
 
 void ssd1306_render(SSD1306_I2C i2c_c, SSD1306_Frame* frame) {
@@ -87,7 +87,8 @@ void ssd1306_render(SSD1306_I2C i2c_c, SSD1306_Frame* frame) {
         PICO_SSD1306_NUM_PAGES * PICO_SSD1306_WIDTH;
     uint8_t output_buff[output_buff_length];
 
-    __convert_frame_to_columns_segments(frame, output_buff, output_buff_length);
+    _ssd1306_convert_frame_to_columns_segments(frame, output_buff,
+                                               output_buff_length);
 
     SSD1306_DrawData draw_data = {.start_column = 0,
                                   .end_column = PICO_SSD1306_WIDTH - 1,
@@ -108,13 +109,13 @@ void ssd1306_clear(SSD1306_I2C i2c_c) {
 void ssd1306_display_on(SSD1306_I2C i2c_c) {
     uint8_t cmds[1] = {PICO_SSD1306_BASE_DISPLAY_ON};
 
-    _send_commands(i2c_c, cmds, 1);
+    _ssd1306_send_commands(i2c_c, cmds, 1);
 }
 
 void ssd1306_display_off(SSD1306_I2C i2c_c) {
     uint8_t cmds[1] = {PICO_SSD1306_BASE_DISPLAY_OFF};
 
-    _send_commands(i2c_c, cmds, 1);
+    _ssd1306_send_commands(i2c_c, cmds, 1);
 }
 
 void ssd1306_prepare_frame(SSD1306_Frame* frame) {
@@ -122,13 +123,13 @@ void ssd1306_prepare_frame(SSD1306_Frame* frame) {
 }
 
 void ssd1306_load_bitmap(uint8_t* raw_bitmap, SSD1306_Bitmap* target_bitmap) {
-    __init_bitmap(target_bitmap);
-    __load_bitarray_from_flat_bitmap(raw_bitmap, target_bitmap);
+    _ssd1306_init_bitmap(target_bitmap);
+    _ssd1306_load_bitarray_from_flat_bitmap(raw_bitmap, target_bitmap);
 }
 
 void ssd1306_insert_bitmap(SSD1306_Frame* frame, uint8_t x, uint8_t y,
                            SSD1306_Bitmap* bitmap) {
-    __insert_bitmap_into_frame(frame, x, y, bitmap);
+    _ssd1306_insert_bitmap_into_frame(frame, x, y, bitmap);
 }
 
 void ssd1306_render_string(SSD1306_Frame* frame, uint8_t x, uint8_t y,
@@ -146,20 +147,20 @@ void ssd1306_render_string(SSD1306_Frame* frame, uint8_t x, uint8_t y,
             }
         }
 
-        __ssd1306_render_character(frame, current_x, current_y, ch);
+        _ssd1306_render_character(frame, current_x, current_y, ch);
         current_x += 8 + spacing;
     }
 }
 
-void __ssd1306_render_character(SSD1306_Frame* frame, uint8_t x, uint8_t y,
-                                char character) {
+void _ssd1306_render_character(SSD1306_Frame* frame, uint8_t x, uint8_t y,
+                               char character) {
     SSD1306_Bitmap char_bitmap = {.width = 8, .height = 8, .data = NULL};
 
     int char_index = (int)toupper(character);
 
     uint8_t char_buff[8] = {0};
-    memcpy(char_buff, font_8bit[char_index - 32], 8);
+    memcpy(char_buff, ssd1306_font_8bit[char_index - 32], 8);
 
     ssd1306_load_bitmap(char_buff, &char_bitmap);
-    __insert_bitmap_into_frame(frame, x, y, &char_bitmap);
+    _ssd1306_insert_bitmap_into_frame(frame, x, y, &char_bitmap);
 }
