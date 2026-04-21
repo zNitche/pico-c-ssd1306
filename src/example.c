@@ -58,4 +58,6 @@ int main() {
     ssd1306_insert_bitmap(&frame, 68, 12, &test_bitmap);
 
     ssd1306_render(ssd1306_i2c, &frame);
+
+    ssd1306_unload_bitmap(&test_bitmap);
 }

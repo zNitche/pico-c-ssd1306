@@ -2,6 +2,7 @@
 #include "pico/stdlib.h"
 #include <ctype.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "pico_ssd1306/communication.h"
@@ -127,6 +128,14 @@ void ssd1306_load_bitmap(uint8_t* raw_bitmap, SSD1306_Bitmap* target_bitmap) {
     _ssd1306_load_bitarray_from_flat_bitmap(raw_bitmap, target_bitmap);
 }
 
+void ssd1306_unload_bitmap(SSD1306_Bitmap* bitmap) {
+    for (int row_ind = 0; row_ind < bitmap->height; row_ind++) {
+        free(bitmap->data[row_ind]);
+    }
+
+    free(bitmap->data);
+}
+
 void ssd1306_insert_bitmap(SSD1306_Frame* frame, uint8_t x, uint8_t y,
                            SSD1306_Bitmap* bitmap) {
     _ssd1306_insert_bitmap_into_frame(frame, x, y, bitmap);
@@ -163,4 +172,6 @@ void _ssd1306_render_character(SSD1306_Frame* frame, uint8_t x, uint8_t y,
 
     ssd1306_load_bitmap(char_buff, &char_bitmap);
     _ssd1306_insert_bitmap_into_frame(frame, x, y, &char_bitmap);
+
+    ssd1306_unload_bitmap(&char_bitmap);
 }

@@ -11,9 +11,10 @@ void ssd1306_display_on(SSD1306_I2C i2c_c);
 void ssd1306_display_off(SSD1306_I2C i2c_c);
 void ssd1306_prepare_frame(SSD1306_Frame* frame);
 void ssd1306_load_bitmap(uint8_t* raw_bitmap, SSD1306_Bitmap* target_bitmap);
+void ssd1306_unload_bitmap(SSD1306_Bitmap* bitmap);
 void ssd1306_insert_bitmap(SSD1306_Frame* frame, uint8_t x, uint8_t y,
                            SSD1306_Bitmap* bitmap);
 void _ssd1306_render_character(SSD1306_Frame* frame, uint8_t x, uint8_t y,
-                                char character);
+                               char character);
 void ssd1306_render_string(SSD1306_Frame* frame, uint8_t x, uint8_t y,
                            char* string, int spacing, bool textwrap);
