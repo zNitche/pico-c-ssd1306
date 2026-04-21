@@ -156,13 +156,13 @@ void ssd1306_render_string(SSD1306_Frame* frame, uint8_t x, uint8_t y,
             }
         }
 
-        _ssd1306_render_character(frame, current_x, current_y, ch);
+        ssd1306_render_character(frame, current_x, current_y, ch);
         current_x += 8 + spacing;
     }
 }
 
-void _ssd1306_render_character(SSD1306_Frame* frame, uint8_t x, uint8_t y,
-                               char character) {
+void ssd1306_render_character(SSD1306_Frame* frame, uint8_t x, uint8_t y,
+                              char character) {
     SSD1306_Bitmap char_bitmap = {.width = 8, .height = 8, .data = NULL};
 
     int char_index = (int)toupper(character);
