@@ -2,7 +2,7 @@ file(GLOB PICO_SSD1306_EXECS ${CMAKE_CURRENT_LIST_DIR}/src/*.c)
 
 cmake_minimum_required(VERSION 3.27)
 
-project(pico_ssd1306 VERSION 1.0.1)
+project(pico_ssd1306 VERSION 1.0.2)
 
 add_library(pico_ssd1306 INTERFACE)
 

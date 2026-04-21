@@ -12,7 +12,7 @@ set(PICO_BOARD "pico")
 
 include($ENV{PICO_SDK_PATH}/external/pico_sdk_import.cmake)
 
-project(pico_ssd1306_example VERSION 1.0.1)
+project(pico_ssd1306_example VERSION 1.0.2)
 
 pico_sdk_init()
 
